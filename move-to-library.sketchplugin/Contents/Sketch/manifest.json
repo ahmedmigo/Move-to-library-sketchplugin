@@ -11,7 +11,7 @@
     {
       "script" : "moveToLibrary.js",
       "handler" : "moveAllSymbolsToExisitingLibrary",
-      "shortcut" : "cmd alt o",
+      "shortcut" : "cmd alt L",
       "name" : "Move All Symbols To Library",
       "description" : "Delete existing State from the selected Symbol",
       "identifier" : "moveAll.library",
