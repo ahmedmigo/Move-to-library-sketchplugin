@@ -2,22 +2,22 @@
 <img align="right" src="https://github.com/ahmedmigo/Move-to-library-sketchplugin/blob/master/movetolibrary.gif?raw=true">
 
 
-You can now move symbol from your project to any library and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine
+You can now move symbol from your project to any library 🔁 and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine.
 
 
 <h1> How it works </h1>
 <p>
-there is 2 ways:
-Select one or multiple symbols or symbol instance and select from the plugin menu Move selected artboards to library.
-a pop up will appear to select the libraries you have
-choose your librery and click select
-Volaaaa you have the symbols re-attached
+✅  Select one or multiple symbols or symbol instance. </br>
+🔁 select from the plugin menu 💎 <b> "Move All Symbols To Library" </b> or <b> "Move Selected Symbols To Library" </b>.</br>
+choose your librery and click select ✅ </br>
+Volaaaa 🎉 you have the symbols re-attached 😎
+</br>
+</br>
 
-the second way is to select from the plugin menu Move all document symbols then select the target library and you will have everything connected
-
-Important: if you have too many symbols the plugin will take some time so please wait until it finish
-
-don't forget to follow me on twitter @ser_migo
+Important ⚠️ ⚠️ ⚠️: if you have too many symbols the plugin will take some time 🕗 so please wait until it finish
+</br>
+</br>
+don't forget to follow me on twitter @ser_migo 🐦
 </p>
 
 
