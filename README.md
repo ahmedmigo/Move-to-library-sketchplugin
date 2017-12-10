@@ -1,23 +1,23 @@
 # Move to library Sketch Plugin
 
-<img align="center" src="https://github.com/ahmedmigo/Symbol-state/blob/master/icon.png?raw=true">
-<img align="right" src="https://raw.githubusercontent.com/ahmedmigo/Symbol-state/master/screenshot.png">
+<img align="center" src="https://raw.githubusercontent.com/ahmedmigo/Move-to-library-sketchplugin/master/icon.png">
+<img align="right" src="https://raw.githubusercontent.com/ahmedmigo/Move-to-library-sketchplugin/master/screenshot.png">
 
 
-You can now move symbol from your project to any library and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine 
+You can now move symbol from your project to any library and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine
 
 
 <h1> How it works </h1>
 <p>
 there is 2 ways:
 Select one or multiple symbols or symbol instance and select from the plugin menu Move selected artboards to Excisitng library.
-a pop up will appear to select the libraries you have 
+a pop up will appear to select the libraries you have
 choose your librery and click select
 Volaaaa you have the symbols re-attached
 
 the second way is to select from the plugin menu Move all docment symbols then select the traget library and you will have everything connected
 
-Important: if you have too many symbols the plugin will take some time so please wait until it finish 
+Important: if you have too many symbols the plugin will take some time so please wait until it finish
 
 don't forget to follow me on twitter @ser_migo
 </p>
