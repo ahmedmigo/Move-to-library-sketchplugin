@@ -3,7 +3,7 @@ function moveAllSymbolsToNewLibrary (context) {
 		var localSymbols = context.document.documentData().localSymbols()
 		for (var i=0; i < localSymbols.count();i ++)
 		{
-  		AddSymbolToDoc(localSymbols[i],libraryDoc.documentData())
+  		AddSymbolToDoc(localSymbols[i],libraryDoc.documentData(),false)
 		}
 		//addDocToLibraries(libraryDoc)
 }
@@ -194,25 +194,43 @@ function AddNewPageToDoc(name,doc){
 }
 
 
+function getMatchSymbolInDoc (symbol,doc)
+{
+	var docSymbols = doc.localSymbols()
+	for (var i = 0; i < docSymbols.count();i++)
+	{
+		if(docSymbols[i].name().substring(0,100) == symbol.name().substring(0,100))
+		{
+			return docSymbols[i]
+		}
+	}
+	return -1
+}
+
 //add symbols with it's nest without dubliucate by using copiedSymbolsObject
 // Adject the postion on the doc with the same poition in the original file
-function AddSymbolToDoc (symbol,doc) {
-  if (copiedSymbols[symbol] == null)
+function AddSymbolToDoc (symbol,doc,exist) {
+  if (!exist)
   {
     var symbolChildren = symbol.children()
     for (var i = 0; i < symbolChildren.count(); i++)
     {
-      if (symbol.children()[i].class() == MSSymbolInstance)
+			var matchedSymbol = getMatchSymbolInDoc(symbol.children()[i],doc)
+			log ("🛑 " + matchedSymbol)
+      if (symbol.children()[i].class() == MSSymbolInstance && matchedSymbol == -1)
       {
-        AddSymbolToDoc(symbol.children()[i].symbolMaster(),doc)
+        AddSymbolToDoc(symbol.children()[i].symbolMaster(),doc,false)
       }
+			else if (symbol.children()[i].class() == MSSymbolInstance){
+				symbol.children()[i].changeInstanceToSymbol(matchedSymbol)
+			}
     }
-    //var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
-    //var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
+    var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
+    var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
     doc.addSymbolMaster(symbol)
-    //symbol.frame().setX(frameX)
-    //symbol.frame().setY(frameY)
-    copiedSymbols[symbol]=1
+    symbol.frame().setX(frameX)
+    symbol.frame().setY(frameY)
+    //copiedSymbols[symbol]=1
   }
 }
 
@@ -271,7 +289,7 @@ function addSymbolTolibrary (symbol,library){
 
 		var document = MSDocument.new();
 		document.readDocumentFromURL_ofType_error(fileURL,"sketch", null);
-		AddSymbolToDoc(symbol,document.documentData())
+		AddSymbolToDoc(symbol,document.documentData(),false)
 		//document.documentData().addSymbolMaster(symbol)
 		[document writeToURL:fileURL ofType:"sketch" forSaveOperation:1 originalContentsURL:fileURL error:null]
 }
