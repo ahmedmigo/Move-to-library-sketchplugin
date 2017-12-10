@@ -4,7 +4,7 @@
     "version" : "1.0",
     "description" : "Move symbols from project files to library",
     "authorEmail" : "ahmad.migo@gmail.com",
-    "URL": "https://github.com/ahmedmigo/Symbol-state",
+    "URL": "https://github.com/ahmedmigo/Move-to-library-sketchplugin",
     "author" : "Ahmed Genaidy",
 
     "commands" : [
