@@ -18,28 +18,34 @@ function moveAllSymbolsToExisitingLibrary (context) {
 				context.document.showMessage("Moving [" + i + "/" + localSymbols.count() + "] 🕗")
 				replaceInstance (context,localSymbols[i],userLibraries.Reference[libraryIndex])
 			}
-			context.document.showMessage( movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and " + movedInstancesNumber + " Re-attached ✌️")
+			context.document.showMessage( movedInstancesNumber + " Re-attached ✌️" + movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and ")
 
 		}
 	}
 
 
 function moveSelectedSymbolsToExisitingLibrary (context){
-	if (validate(context))
-	{
 		userLibraries = getAllLibraries();
 		var libraryIndex = getLayoutSettings(context,userLibraries.name)
 		if (libraryIndex != -1){
 				var selection = context.selection
 				for (var i = 0; i < selection.count(); i++)
 				{
-					context.document.showMessage("Moving [" + i + "/" + selection.count() + "] 🕗")
-					var selectedSymbols = selection[i]
-					replaceInstance (context,selectedSymbols,userLibraries.Reference[libraryIndex])
+					if (validate(context,i))
+					{
+						context.document.showMessage("Moving [" + i + "/" + selection.count() + "] 🕗")
+						var selectedSymbols = selection[i]
+						if (selectedSymbols.class() == MSSymbolMaster)
+						{
+							replaceInstance (context,selectedSymbols,userLibraries.Reference[libraryIndex])
+						} else {
+							replaceInstance (context,selectedSymbols.symbolMaster(),userLibraries.Reference[libraryIndex])
+						}
+
+					}
 				}
-				context.document.showMessage( movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and " + movedInstancesNumber + " Re-attached ✌️")
+				context.document.showMessage( movedInstancesNumber + " Re-attached ✌️" + movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and ")
 			}
-		}
 }
 
 function createSelect(items,selectedItemIndex,frame) {
@@ -149,12 +155,12 @@ function getLayoutSettings(context,librariesArray) {
 
 
 
-function validate (context){
+function validate (context,i){
     var doc = context.document;
     if (context.selection.count() == 0) {
         doc.showMessage("No layer selected, Please select symbol instance layer 🤔");
 		}
-    else if (context.selection[0].class() == MSSymbolMaster || context.selection[0].class() == MSSymbolInstance) {
+    else if (context.selection[i].class() == MSSymbolMaster || context.selection[i].class() == MSSymbolInstance) {
         return true;
     }
     else {
