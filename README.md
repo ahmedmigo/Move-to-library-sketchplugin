@@ -8,8 +8,11 @@ You can now move symbol from your project to any library 🔁 and re-attach all 
 <h1> How it works </h1>
 <p>
 ✅  Select one or multiple symbols or symbol instance. </br>
-🔁 select from the plugin menu 💎 <b> "Move All Symbols To Library" </b> or <b> "Move Selected Symbols To Library" </b>.</br>
-choose your librery and click select ✅ </br>
+</br>
+🔁 Select from the plugin menu 💎 <b> "Move All Symbols To Library" </b> or <b> "Move Selected Symbols To Library" </b>.</br>
+</br>
+Choose your librery and click select ✅ </br>
+</br>
 Volaaaa 🎉 you have the symbols re-attached 😎
 </br>
 </br>
