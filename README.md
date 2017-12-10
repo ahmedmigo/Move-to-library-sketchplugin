@@ -11,13 +11,15 @@ You can now move symbol from your project to any library 🔁 and re-attach all 
 </br>
 🔁 Select from the plugin menu 💎 <b> "Move All Symbols To Library" </b> or <b> "Move Selected Symbols To Library" </b>.</br>
 </br>
-Choose your librery and click select ✅ </br>
+Choose your library and click select ✅ </br>
 </br>
 Volaaaa 🎉 you have the symbols re-attached 😎
 </br>
 </br>
 
-Important ⚠️ ⚠️ ⚠️: if you have too many symbols the plugin will take some time 🕗 so please wait until it finish
+Important 1 ⚠️ ⭕️: Organize your library symbol names and your symbols names in your project, make the same components with the same name, Remove ❌ any duplicate names, otherwise you will suffer from wrong replacement of symbols
+Important 2 ⚠️ ⚠️ ⚠️: If you have too many symbols the plugin will take some time 🕗 so please wait until it finish
+
 </br>
 </br>
 don't forget to follow me on twitter @ser_migo 🐦
