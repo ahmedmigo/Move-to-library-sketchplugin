@@ -1,0 +1,30 @@
+{
+    "name" : "Move To Library 🔁",
+    "identifier" : "moveToLibrary.plugin",
+    "version" : "1.0",
+    "description" : "Move symbols from project files to library",
+    "authorEmail" : "ahmad.migo@gmail.com",
+    "URL": "https://github.com/ahmedmigo/Symbol-state",
+    "author" : "Ahmed Genaidy",
+
+    "commands" : [
+    {
+      "script" : "moveToLibrary.js",
+      "handler" : "moveAllSymbolsToExisitingLibrary",
+      "shortcut" : "cmd alt o",
+      "name" : "Move All Symbols To Library",
+      "description" : "Delete existing State from the selected Symbol",
+      "identifier" : "moveAll.library",
+      "icon" : "icon-sr.png"
+    },
+    {
+      "script" : "moveToLibrary.js",
+      "handler" : "moveSelectedSymbolsToExisitingLibrary",
+      "shortcut" : "cmd alt k",
+      "name" : "Move Selected Symbols To Library",
+      "description" : "Select State from the Symbol states and apply it to instance",
+      "identifier" : "moveSelected.library",
+      "icon" : "icon-sr.png"
+    }
+  ]
+}
