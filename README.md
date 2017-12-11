@@ -2,8 +2,9 @@
 <p>
 You can now move symbol from your project to any library 🔁 and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine.
 </p>
-<img align="center" src="https://github.com/ahmedmigo/Move-to-library-sketchplugin/blob/master/movetolibrary.gif?raw=true">
-
+<center>
+<img src="https://github.com/ahmedmigo/Move-to-library-sketchplugin/blob/master/movetolibrary.gif?raw=true">
+</center>
 <p>
 You can now move symbol from your project to any library 🔁 and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine.
 </p>
