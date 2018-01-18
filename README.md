@@ -23,6 +23,8 @@ Volaaaa 🎉 you have the symbols re-attached 😎
 Important 1 ⚠️ ⭕️: Organize your library symbol names and your symbols names in your project, make the same components with the same name, Remove ❌ any duplicate names, otherwise you will suffer from wrong replacement of symbols
 Important 2 ⚠️ ⚠️ ⚠️: If you have too many symbols the plugin will take some time 🕗 so please wait until it finish
 
+for More Information Read my article on Medium: 
+https://medium.com/@ser_migo/how-to-split-you-sketch-file-into-library-274ec9c1f4f0
 
 </br>
 <b>Download the plugin⬇️ </b></br> https://github.com/ahmedmigo/Move-to-library-sketchplugin/archive/master.zip
