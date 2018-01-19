@@ -251,12 +251,13 @@ function AddSymbolToDoc (symbol,symbolsInDocByName,doc) {
 				symbol.children()[i].changeInstanceToSymbol(matchedSymbol)
 			}
     }
+		var symbolCopy = symbol.duplicate()
     var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
     var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
-    doc.addSymbolMaster(symbol)
+    doc.addSymbolMaster(symbolCopy)
 		movedSymbolsNumber++;
-    symbol.frame().setX(frameX)
-    symbol.frame().setY(frameY)
+    symbolCopy.frame().setX(frameX)
+    symbolCopy.frame().setY(frameY)
     //copiedSymbols[symbol]=1
 }
 
@@ -318,6 +319,7 @@ function addSymbolTolibrary (symbol,symbolsInDocByName,library){
 			log(fileURL)
 			foreigndocument = MSDocument.new();
 			foreigndocument.readDocumentFromURL_ofType_error(fileURL,"sketch", null);
+			foreigndocument.revertToContentsOfURL_ofType_error(fileURL, "sketch", null);
 		}
 		AddSymbolToDoc(symbol,symbolsInDocByName,foreigndocument.documentData())
 		[foreigndocument writeToURL:fileURL ofType:"sketch" forSaveOperation:1 originalContentsURL:fileURL error:null]
