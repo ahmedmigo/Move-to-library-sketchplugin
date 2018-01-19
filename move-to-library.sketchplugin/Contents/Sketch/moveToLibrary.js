@@ -251,14 +251,15 @@ function AddSymbolToDoc (symbol,symbolsInDocByName,doc) {
 			}
     }
 
-		//var symbolCopy = symbol.duplicate()
-    var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
-    var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
-    doc.addSymbolMaster(symbol)
-		symbolsInDocByName[symbol.name()] = symbol;
+		var symbolCopy = symbol.duplicate()
+    var frameX = JSON.parse(JSON.stringify(symbolCopy.frame().x()))
+    var frameY = JSON.parse(JSON.stringify(symbolCopy.frame().y()))
+    doc.addSymbolMaster(symbolCopy)
+		symbolsInDocByName[symbolCopy.name()] = symbolCopy;
 		movedSymbolsNumber++;
-    symbol.frame().setX(frameX)
-    symbol.frame().setY(frameY)
+    symbolCopy.frame().setX(frameX)
+    symbolCopy.frame().setY(frameY)
+		symbol.removeFromParent()
 		return symbolsInDocByName;
     //copiedSymbols[symbol]=1
 }
