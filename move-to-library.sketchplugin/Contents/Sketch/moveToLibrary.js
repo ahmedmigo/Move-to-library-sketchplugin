@@ -207,7 +207,6 @@ function getIdMap (context, localSymbolsByName, foreignSymbolsByName,library)
 }
 
 
-
 function getMatchSymbolInDoc (symbol,docSymbolsWithNames)
 {
 		if(docSymbolsWithNames[symbol.name()] != undefined)
@@ -244,20 +243,23 @@ function AddSymbolToDoc (symbol,symbolsInDocByName,doc) {
 				var matchedSymbol = getMatchSymbolInDoc(symbol.children()[i].symbolMaster(),symbolsInDocByName)
 				log ("🛑 " + matchedSymbol)
 				if(matchedSymbol == -1 ) {
-					  AddSymbolToDoc(symbol.children()[i].symbolMaster(),symbolsInDocByName,doc)
+					  return AddSymbolToDoc(symbol.children()[i].symbolMaster(),symbolsInDocByName,doc)
 				}
       }
-			else if (symbol.children()[i].class() == MSSymbolInstance){
+			if (symbol.children()[i].class() == MSSymbolInstance){
 				symbol.children()[i].changeInstanceToSymbol(matchedSymbol)
 			}
     }
-		var symbolCopy = symbol.duplicate()
+
+		//var symbolCopy = symbol.duplicate()
     var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
     var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
-    doc.addSymbolMaster(symbolCopy)
+    doc.addSymbolMaster(symbol)
+		symbolsInDocByName[symbol.name()] = symbol;
 		movedSymbolsNumber++;
-    symbolCopy.frame().setX(frameX)
-    symbolCopy.frame().setY(frameY)
+    symbol.frame().setX(frameX)
+    symbol.frame().setY(frameY)
+		return symbolsInDocByName;
     //copiedSymbols[symbol]=1
 }
 
@@ -321,7 +323,7 @@ function addSymbolTolibrary (symbol,symbolsInDocByName,library){
 			foreigndocument.readDocumentFromURL_ofType_error(fileURL,"sketch", null);
 			foreigndocument.revertToContentsOfURL_ofType_error(fileURL, "sketch", null);
 		}
-		AddSymbolToDoc(symbol,symbolsInDocByName,foreigndocument.documentData())
+		symbolsInDocByName = AddSymbolToDoc(symbol,symbolsInDocByName,foreigndocument.documentData())
 		[foreigndocument writeToURL:fileURL ofType:"sketch" forSaveOperation:1 originalContentsURL:fileURL error:null]
 }
 
