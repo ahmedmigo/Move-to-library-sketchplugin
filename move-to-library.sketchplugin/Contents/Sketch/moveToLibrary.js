@@ -3,11 +3,9 @@ function moveAllSymbolsToExisitingLibrary (context) {
 	var libraryIndex = getLayoutSettings(context,userLibraries.name)
 	var library = userLibraries.Reference[libraryIndex]
 	if (libraryIndex != -1){
-			log("⚠️")
 			var symbolsInDocByName = getSymbolsInDocByName(library.document())
 			var localSymbolsByName = getSymbolsInDocByName(context.document.documentData())
 			getIdMap(context,localSymbolsByName,symbolsInDocByName,library)
-			log(symbolsInDocByName + "⚠️")
 			var localSymbols = context.document.documentData().localSymbols()
 			for (var i = 0; i < localSymbols.count(); i++)
 			{
@@ -15,13 +13,14 @@ function moveAllSymbolsToExisitingLibrary (context) {
 				replaceInstance (context,localSymbols[i],symbolsInDocByName,library)
 			}
 			context.api().message( movedInstancesNumber + " Re-attached ✌️" + movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and ")
-
+		}
+		else {
+			context.api().message( "You don't have any Library yet, Please add library first")
 		}
 	}
 
 
 function moveSelectedSymbolsToExisitingLibrary (context){
-		log("⚠️")
 		userLibraries = getAllLibraries();
 		var libraryIndex = getLayoutSettings(context,userLibraries.name)
 		if (libraryIndex != -1){
@@ -31,22 +30,21 @@ function moveSelectedSymbolsToExisitingLibrary (context){
 					if (validate(context,i))
 					{
 						// context.api().message("Moving [" + i + "/" + selection.count() + "] 🕗")
-						var selectedSymbols = selection[i]
+						var selectedSymbol = selection[i]
 						var library = userLibraries.Reference[libraryIndex]
 						var symbolsInDocByName = getSymbolsInDocByName(library.document())
 						var localSymbolsByName = getSymbolsInDocByName(context.document.documentData())
 						getIdMap(context,localSymbolsByName,symbolsInDocByName,library)
-						log(idmap)
-						if (selectedSymbols.class() == MSSymbolMaster)
+						if (selectedSymbol.class() == MSSymbolMaster || selectedSymbol.class() == MSSymbolInstance)
 						{
-							replaceInstance (context,selectedSymbols,symbolsInDocByName,library)
-						} else {
-							replaceInstance (context,selectedSymbols.symbolMaster(),symbolsInDocByName,library)
+							replaceInstance (context,selectedSymbol,symbolsInDocByName,library)
 						}
-
 					}
 				}
 				context.api().message( movedInstancesNumber + " Re-attached ✌️" + movedSymbolsNumber + " Symbols moved to [" + userLibraries.name[libraryIndex] + "] successfully ✅ 😎 and ")
+			}
+			else {
+				context.api().message( "You don't have any Library yet, Please add library first")
 			}
 }
 
@@ -146,7 +144,6 @@ function getLayoutSettings(context,librariesArray) {
 		]);
 
 		var responseCode = alertWindow.runModal();
-        log(responseCode)
         if (responseCode == 1000) {
                 // context.api().message("loading..  🕑 ")
 								return [groupGranularityValue indexOfSelectedItem]
@@ -232,36 +229,29 @@ function getMatchSymbolInDoc (symbol,docSymbolsWithNames)
 //add symbols with it's nest without dubliucate by using copiedSymbolsObject
 // Adject the postion on the doc with the same poition in the original file
 
-function AddSymbolToDoc (symbol,symbolsInDocByName,doc) {
+function AddSymbolToDoc (context,symbol,symbolsInDocByName,doc,library,localDoc) {
     var symbolChildren = symbol.children()
+		var symbolCopy = symbol.copy()
+		localDoc.addSymbolMaster(symbolCopy)
     for (var i = 0; i < symbolChildren.count(); i++)
     {
-			log(symbol.children()[i].class())
-			log(symbol.children()[i].class() == MSSymbolInstance)
-      if (symbol.children()[i].class() == MSSymbolInstance)
+      if (symbolChildren[i].class() == MSSymbolInstance)
       {
-				var matchedSymbol = getMatchSymbolInDoc(symbol.children()[i].symbolMaster(),symbolsInDocByName)
-				log ("🛑 " + matchedSymbol)
-				if(matchedSymbol == -1 ) {
-					  return AddSymbolToDoc(symbol.children()[i].symbolMaster(),symbolsInDocByName,doc)
-				}
+				symbolsInDocByName = replaceInstance (context,symbol.children()[i],symbolsInDocByName,library)
+				var childMaster = symbolsInDocByName[symbolChildren[i].symbolMaster().name()]
+				symbolCopy.children()[i].changeInstanceToSymbol(childMaster)
       }
-			if (symbol.children()[i].class() == MSSymbolInstance){
-				symbol.children()[i].changeInstanceToSymbol(matchedSymbol)
-			}
     }
-
-		var symbolCopy = symbol.duplicate()
-    var frameX = JSON.parse(JSON.stringify(symbolCopy.frame().x()))
-    var frameY = JSON.parse(JSON.stringify(symbolCopy.frame().y()))
+		symbolCopy.removeFromParent()
+    var frameX = JSON.parse(JSON.stringify(symbol.frame().x()))
+    var frameY = JSON.parse(JSON.stringify(symbol.frame().y()))
     doc.addSymbolMaster(symbolCopy)
 		symbolsInDocByName[symbolCopy.name()] = symbolCopy;
 		movedSymbolsNumber++;
     symbolCopy.frame().setX(frameX)
     symbolCopy.frame().setY(frameY)
-		symbol.removeFromParent()
+
 		return symbolsInDocByName;
-    //copiedSymbols[symbol]=1
 }
 
 //add file to libraries
@@ -284,48 +274,83 @@ function getAllLibraries () {
 	return librariesNameAndReference;
 }
 
-function replaceInstance (context,symbol,symbolsInDocByName,library) {
-    var symbolID = symbol.symbolID()
-    var symbolName = symbol.name()
-    var librarySymbols = library.document().localSymbols()
-		var symbolInDoc = symbolsInDocByName[symbolName]
-    if(symbolInDoc != undefined){
-		var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
-				reattachAllInstance(context,symbolID,foriegnSymbols)
-				log ( movedInstancesNumber + " Instance Done 🤘")
-				context.api().message(movedInstancesNumber + " Instance Done 🤘"))
-    }
+function replaceInstance2 (context,symbol,symbolsInDocByName,library) {
+			var symbolID = symbol.symbolID()
+	    var symbolName = symbol.name()
+	    var librarySymbols = library.document().localSymbols()
+			var symbolInDoc = symbolsInDocByName[symbolName]
+	    if(symbolInDoc != undefined){
+			var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
+					reattachAllInstance(context,symbolID,foriegnSymbols)
+					log ( movedInstancesNumber + " Instance Done 🤘")
+					context.api().message(movedInstancesNumber + " Instance Done 🤘"))
+	    }
 		//if symbol not exsit add and reattach instance
 		else {
-			if (symbol.class() == MSSymbolMaster) {
-				addSymbolTolibrary (symbol,symbolsInDocByName,library)
+			if (symbol.class() == MSSymbolMaster && !symbol.isForeign() ) {
+				symbolsInDocByName = addSymbolTolibrary (context,symbol,symbolsInDocByName,library,context.document.documentData())
 				log ( movedSymbolsNumber + " Symbols moved 🤘")
 				context.api().message(movedSymbolsNumber + " Symbols moved 🤘")
 				var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbol,library)
 				idmap[symbol.symbolID()] = foriegnSymbols.symbolID()
 				reattachAllInstance(context,symbolID,foriegnSymbols)
 			}
-			else if (symbol.class() == MSSymbolInstance ){
-				addSymbolTolibrary (symbol.symbolMaster(),symbolsInDocByName,library)
+			else if (symbol.class() == MSSymbolInstance && !symbol.symbolMaster().isForeign()){
+				symbolsInDocByName = addSymbolTolibrary (context,symbol.symbolMaster(),symbolsInDocByName,library,context.document.documentData())
 				var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbol,library)
 				idmap[symbol.symbolMaster().symbolID()] = foriegnSymbols.symbolID()
 				reattachAllInstance(context,symbolID,foriegnSymbols)
 			}
 		}
+		return symbolsInDocByName
 }
+
+function replaceInstance (context,symbol,symbolsInDocByName,library) {
+		if (symbol.class() == MSSymbolInstance)
+		{
+			symbol = symbol.symbolMaster()
+		}
+		if (!symbol.isForeign())
+		{
+			var symbolID = symbol.symbolID()
+	    var symbolName = symbol.name()
+	    var librarySymbols = library.document().localSymbols()
+			var symbolInDoc = symbolsInDocByName[symbolName]
+	    if(symbolInDoc != undefined){
+					var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
+					log("foreignSymbol :" + foriegnSymbol)
+					reattachAllInstance(context,symbolID,foriegnSymbol)
+					log ( movedInstancesNumber + " Instance Done 🤘")
+					context.api().message(movedInstancesNumber + " Instance Done 🤘"))
+	    }
+		//if symbol not exsit add and reattach instance
+			else {
+					symbolsInDocByName = addSymbolTolibrary (context,symbol,symbolsInDocByName,library,context.document.documentData())
+					log ( movedSymbolsNumber + " Symbols moved 🤘")
+					symbolInDoc = symbolsInDocByName[symbolName]
+					var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
+					idmap[symbol.symbolID()] = foriegnSymbol.symbolID()
+					reattachAllInstance(context,symbolID,foriegnSymbol)
+				}
+		}
+	return symbolsInDocByName
+}
+
+
+
 var fileURL = undefined
 var foreigndocument = undefined
-function addSymbolTolibrary (symbol,symbolsInDocByName,library){
+function addSymbolTolibrary (context,symbol,symbolsInDocByName,library,localDoc){
 		if (fileURL == undefined)
 		{
 			fileURL = library.locationOnDisk()
-			log(fileURL)
 			foreigndocument = MSDocument.new();
 			foreigndocument.readDocumentFromURL_ofType_error(fileURL,"sketch", null);
 			foreigndocument.revertToContentsOfURL_ofType_error(fileURL, "sketch", null);
 		}
-		symbolsInDocByName = AddSymbolToDoc(symbol,symbolsInDocByName,foreigndocument.documentData())
+		symbolsInDocByName = AddSymbolToDoc(context,symbol,symbolsInDocByName,foreigndocument.documentData(),library,localDoc)
 		[foreigndocument writeToURL:fileURL ofType:"sketch" forSaveOperation:1 originalContentsURL:fileURL error:null]
+		return symbolsInDocByName;
 }
 
 var movedInstancesNumber = 0
