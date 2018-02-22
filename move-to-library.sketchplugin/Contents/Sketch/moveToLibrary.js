@@ -310,29 +310,26 @@ function replaceInstance (context,symbol,symbolsInDocByName,library) {
 		{
 			symbol = symbol.symbolMaster()
 		}
-		if (!symbol.isForeign())
-		{
-			var symbolID = symbol.symbolID()
-	    var symbolName = symbol.name()
-	    var librarySymbols = library.document().localSymbols()
-			var symbolInDoc = symbolsInDocByName[symbolName]
-	    if(symbolInDoc != undefined){
-					var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
-					log("foreignSymbol :" + foriegnSymbol)
-					reattachAllInstance(context,symbolID,foriegnSymbol)
-					log ( movedInstancesNumber + " Instance Done 🤘")
-					context.api().message(movedInstancesNumber + " Instance Done 🤘"))
-	    }
+		var symbolID = symbol.symbolID()
+    var symbolName = symbol.name()
+    var librarySymbols = library.document().localSymbols()
+		var symbolInDoc = symbolsInDocByName[symbolName]
+    if(symbolInDoc != undefined){
+				var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
+				log("foreignSymbol :" + foriegnSymbol)
+				reattachAllInstance(context,symbolID,foriegnSymbol)
+				log ( movedInstancesNumber + " Instance Done 🤘")
+				context.api().message(movedInstancesNumber + " Instance Done 🤘"))
+    }
 		//if symbol not exsit add and reattach instance
-			else {
-					symbolsInDocByName = addSymbolTolibrary (context,symbol,symbolsInDocByName,library,context.document.documentData())
-					log ( movedSymbolsNumber + " Symbols moved 🤘")
-					symbolInDoc = symbolsInDocByName[symbolName]
-					var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
-					idmap[symbol.symbolID()] = foriegnSymbol.symbolID()
-					reattachAllInstance(context,symbolID,foriegnSymbol)
-				}
-		}
+		else {
+				symbolsInDocByName = addSymbolTolibrary (context,symbol,symbolsInDocByName,library,context.document.documentData())
+				log ( movedSymbolsNumber + " Symbols moved 🤘")
+				symbolInDoc = symbolsInDocByName[symbolName]
+				var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
+				idmap[symbol.symbolID()] = foriegnSymbol.symbolID()
+				reattachAllInstance(context,symbolID,foriegnSymbol)
+			}
 	return symbolsInDocByName
 }
 
