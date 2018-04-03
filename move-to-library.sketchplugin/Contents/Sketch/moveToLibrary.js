@@ -213,21 +213,6 @@ function getMatchSymbolInDoc (symbol,docSymbolsWithNames)
 	return -1
 }
 
-// function getMatchSymbolInDoc (symbol,doc)
-// {
-// 	var docSymbols = doc.localSymbols()
-// 	for (var i = 0; i < docSymbols.count();i++)
-// 	{
-// 		if(docSymbols[i].name().substring(0,100) == symbol.name().substring(0,100))
-// 		{
-// 			return docSymbols[i]
-// 		}
-// 	}
-// 	return -1
-// }
-
-//add symbols with it's nest without dubliucate by using copiedSymbolsObject
-// Adject the postion on the doc with the same poition in the original file
 
 function AddSymbolToDoc (context,symbol,symbolsInDocByName,doc,library,localDoc) {
     var symbolChildren = symbol.children()
@@ -250,7 +235,6 @@ function AddSymbolToDoc (context,symbol,symbolsInDocByName,doc,library,localDoc)
 		movedSymbolsNumber++;
     symbolCopy.frame().setX(frameX)
     symbolCopy.frame().setY(frameY)
-
 		return symbolsInDocByName;
 }
 
@@ -274,36 +258,6 @@ function getAllLibraries () {
 	return librariesNameAndReference;
 }
 
-function replaceInstance2 (context,symbol,symbolsInDocByName,library) {
-			var symbolID = symbol.symbolID()
-	    var symbolName = symbol.name()
-	    var librarySymbols = library.document().localSymbols()
-			var symbolInDoc = symbolsInDocByName[symbolName]
-	    if(symbolInDoc != undefined){
-			var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
-					reattachAllInstance(context,symbolID,foriegnSymbols)
-					log ( movedInstancesNumber + " Instance Done 🤘")
-					context.api().message(movedInstancesNumber + " Instance Done 🤘"))
-	    }
-		//if symbol not exsit add and reattach instance
-		else {
-			if (symbol.class() == MSSymbolMaster && !symbol.isForeign() ) {
-				symbolsInDocByName = addSymbolTolibrary (context,symbol,symbolsInDocByName,library,context.document.documentData())
-				log ( movedSymbolsNumber + " Symbols moved 🤘")
-				context.api().message(movedSymbolsNumber + " Symbols moved 🤘")
-				var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbol,library)
-				idmap[symbol.symbolID()] = foriegnSymbols.symbolID()
-				reattachAllInstance(context,symbolID,foriegnSymbols)
-			}
-			else if (symbol.class() == MSSymbolInstance && !symbol.symbolMaster().isForeign()){
-				symbolsInDocByName = addSymbolTolibrary (context,symbol.symbolMaster(),symbolsInDocByName,library,context.document.documentData())
-				var foriegnSymbols = context.document.localSymbolForSymbol_inLibrary(symbol,library)
-				idmap[symbol.symbolMaster().symbolID()] = foriegnSymbols.symbolID()
-				reattachAllInstance(context,symbolID,foriegnSymbols)
-			}
-		}
-		return symbolsInDocByName
-}
 
 function replaceInstance (context,symbol,symbolsInDocByName,library) {
 		if (symbol.class() == MSSymbolInstance)
@@ -317,7 +271,7 @@ function replaceInstance (context,symbol,symbolsInDocByName,library) {
     if(symbolInDoc != undefined){
 				var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
 				log("foreignSymbol :" + foriegnSymbol)
-				reattachAllInstance(context,symbolID,foriegnSymbol)
+				reattachAllInstance(context,symbol,foriegnSymbol)
 				log ( movedInstancesNumber + " Instance Done 🤘")
 				context.api().message(movedInstancesNumber + " Instance Done 🤘"))
     }
@@ -328,7 +282,7 @@ function replaceInstance (context,symbol,symbolsInDocByName,library) {
 				symbolInDoc = symbolsInDocByName[symbolName]
 				var foriegnSymbol = context.document.localSymbolForSymbol_inLibrary(symbolInDoc,library)
 				idmap[symbol.symbolID()] = foriegnSymbol.symbolID()
-				reattachAllInstance(context,symbolID,foriegnSymbol)
+				reattachAllInstance(context,symbol,foriegnSymbol)
 			}
 	return symbolsInDocByName
 }
@@ -353,8 +307,8 @@ function addSymbolTolibrary (context,symbol,symbolsInDocByName,library,localDoc)
 var movedInstancesNumber = 0
 var movedSymbolsNumber = 0
 
-function reattachAllInstance (context,symbolID,foreignSymbol) {
-    var Instances = context.document.documentData().symbolInstancesBySymbolID()[symbolID]
+function reattachAllInstance (context,symbol,foreignSymbol) {
+		var Instances = getSymbolInstances(context,symbol)
 		if (Instances != null)
 		{
 			var instanceArray = Instances.allObjects()
@@ -365,16 +319,29 @@ function reattachAllInstance (context,symbolID,foreignSymbol) {
 	        instanceArray[i].changeInstanceToSymbol(foreignSymbol)
 					instanceArray[i].updateOverridesWithObjectIDMap(idmap)
 					movedInstancesNumber++;
+					//symbol.removeFromParent()
 	    }
 		}
 }
 
 
-function matchMasterSymbolwithForeignSymbolID (symbolID) {
-  var foreignSymbolsID = context.document.documentData().foreignSymbols()
-  for (var i= 0 ; i < Instances.count(); i++)
-    {
+function getSymbolInstances(context,symbolMaster) {
+	var symbolInstances = NSMutableArray.array();
 
-        Instances.allObjects()[i].changeInstanceToSymbol(foreignSymbolsID)
-    }
+	var pages = context.document.pages(),
+		pageLoop = pages.objectEnumerator(),
+		page;
+
+	while (page = pageLoop.nextObject()) {
+		var predicate = NSPredicate.predicateWithFormat("className == 'MSSymbolInstance' && symbolMaster == %@",symbolMaster),
+			instances = page.children().filteredArrayUsingPredicate(predicate),
+			instanceLoop = instances.objectEnumerator(),
+			instance;
+
+		while (instance = instanceLoop.nextObject()) {
+			symbolInstances.addObject(instance);
+		}
+	}
+
+	return symbolInstances;
 }
