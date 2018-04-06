@@ -284,6 +284,7 @@ function replaceInstance (context,symbol,symbolsInDocByName,library) {
 				idmap[symbol.symbolID()] = foriegnSymbol.symbolID()
 				reattachAllInstance(context,symbol,foriegnSymbol)
 			}
+	symbol.removeFromParent()
 	return symbolsInDocByName
 }
 
