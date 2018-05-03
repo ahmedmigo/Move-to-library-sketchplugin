@@ -28,9 +28,11 @@ https://medium.com/@ser_migo/how-to-split-you-sketch-file-into-library-274ec9c1f
 
 <br>
 if you saved your time shoot me some coffee to be awake for improvements ☕️
+<br>
 <a href="https://www.paypal.me/ahmedgenaidy">
-	<img width="160" height="41" src="https://raw.githubusercontent.com/DWilliames/PDF-export-sketch-plugin/master/images/paypal-badge.png">
+<img width="160" height="41" src="https://raw.githubusercontent.com/DWilliames/PDF-export-sketch-plugin/master/images/paypal-badge.png">
 </br>
+</a>
 <b>Download the plugin⬇️ </b></br> https://github.com/ahmedmigo/Move-to-library-sketchplugin/archive/master.zip
 </br>
 don't forget to follow me on twitter @ser_migo 🐦
