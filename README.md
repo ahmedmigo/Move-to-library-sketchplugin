@@ -43,3 +43,6 @@ Available on
 <a href="http://bit.ly/SketchRunnerWebsite">
      <img  src="http://bit.ly/RunnerBadgeBlue">
 </a>
+
+<a href="https://www.paypal.me/ahmedgenaidy">
+	<img width="160" height="41" src="https://raw.githubusercontent.com/DWilliames/PDF-export-sketch-plugin/master/images/paypal-badge.png">
