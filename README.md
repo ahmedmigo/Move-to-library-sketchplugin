@@ -26,6 +26,9 @@ Important 2 ⚠️ ⚠️ ⚠️: If you have too many symbols the plugin will t
 for More Information Read my article on Medium: 
 https://medium.com/@ser_migo/how-to-split-you-sketch-file-into-library-274ec9c1f4f0
 
+if you saved your time shoot me some coffee to be awake for improvements ☕️
+<a href="https://www.paypal.me/ahmedgenaidy">
+	<img width="160" height="41" src="https://raw.githubusercontent.com/DWilliames/PDF-export-sketch-plugin/master/images/paypal-badge.png">
 </br>
 <b>Download the plugin⬇️ </b></br> https://github.com/ahmedmigo/Move-to-library-sketchplugin/archive/master.zip
 </br>
@@ -44,5 +47,4 @@ Available on
      <img  src="http://bit.ly/RunnerBadgeBlue">
 </a>
 
-<a href="https://www.paypal.me/ahmedgenaidy">
-	<img width="160" height="41" src="https://raw.githubusercontent.com/DWilliames/PDF-export-sketch-plugin/master/images/paypal-badge.png">
+
