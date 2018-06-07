@@ -98,7 +98,7 @@ var exports =
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/4d9ecc2e9bf58cf3bf3cfdb1da6ad53d.html").path();
+module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/aa9b57a9f7368b8439ad6026a27fa864.html").path();
 
 /***/ }),
 
@@ -2214,23 +2214,29 @@ function getOverridesFromSymbolOverride(symbolOverride1, symbolOverride2, overri
   LOG(symbolOverride2.overridePoint().layerName());
   overrides[override1] = override2;
   LOG(overrides);
+  var cacheByLayerName1 = [];
+  var cacheByLayerName2 = [];
 
   for (var i = 0; i < availableOverrides1.count(); i++) {
-    for (var j = 0; j < availableOverrides2.count(); j++) {
-      if (availableOverrides1[i].overridePoint().layerName() == availableOverrides2[j].overridePoint().layerName()) {
-        var overridePoint1 = availableOverrides1[i].overridePoint();
-        var overridePoint2 = availableOverrides2[j].overridePoint();
+    var layerName = availableOverrides1[i].overridePoint().layerName();
+    cacheByLayerName1[layerName] = availableOverrides1[i];
+    cacheByLayerName2[layerName] = availableOverrides2[i];
+  }
 
-        if (overridePoint1.isSymbolOverride()) {
-          var symbolOverrides = getOverridesFromSymbolOverride(availableOverrides1[i], availableOverrides2[j], overrides);
-          overrides = Object.assign({}, overrides, symbolOverrides);
-        } else {
-          LOG("4");
-          var override1 = availableOverrides1[i].overridePoint().layerID();
-          var override2 = availableOverrides2[j].overridePoint().layerID();
-          overrides[override1] = override2;
-        }
-      }
+  for (var i = 0; i < availableOverrides1.count(); i++) {
+    var layerName = availableOverrides1[i].overridePoint().layerName();
+    var availableOverride1 = cacheByLayerName1[layerName];
+    var availableOverride2 = cacheByLayerName2[layerName];
+    var overridePoint1 = availableOverride1.overridePoint();
+    var overridePoint2 = availableOverride2.overridePoint();
+
+    if (overridePoint1.isSymbolOverride()) {
+      var symbolOverrides = getOverridesFromSymbolOverride(availableOverride1, availableOverride2, {});
+      overrides = Object.assign({}, overrides, symbolOverrides);
+    } else {
+      var override1 = availableOverride1.overridePoint().layerID();
+      var override2 = availableOverride2.overridePoint().layerID();
+      overrides[override1] = override2;
     }
   }
 
@@ -2249,7 +2255,7 @@ function localSymbolForSymbol_inLibrary(context, symbol, library) {
   return importedSymbol.symbolMaster();
 }
 
-var debug = true;
+var debug = false;
 
 function LOG(message) {
   if (debug) {
