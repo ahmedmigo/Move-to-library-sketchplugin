@@ -1,31 +1,33 @@
 {
-    "name" : "Move To Library 🔁",
-    "identifier" : "moveToLibrary.plugin",
-    "version" : "1.8.1",
-    "compatibleVersion": 49,
-    "description" : "Move symbols from project files to library",
-    "authorEmail" : "ahmad.migo@gmail.com",
-    "URL": "https://github.com/ahmedmigo/Move-to-library-sketchplugin",
-    "author" : "Ahmed Genaidy",
-
-    "commands" : [
+  "name": "Move To Library 🔁",
+  "identifier": "moveToLibrary.plugin",
+  "version": "2.0.0",
+  "compatibleVersion": 50,
+  "description": "Move symbols from project files to library",
+  "authorEmail": "ahmad.migo@gmail.com",
+  "URL": "https://github.com/ahmedmigo/Move-to-library-sketchplugin",
+  "author": "Ahmed Genaidy",
+  "icon": "icon.png",
+  "commands": [
     {
-      "script" : "moveToLibrary.js",
-      "handler" : "moveAllSymbolsToExisitingLibrary",
-      "shortcut" : "cmd alt L",
-      "name" : "Move All Symbols To Library",
-      "description" : "Delete existing State from the selected Symbol",
-      "identifier" : "moveAll.library",
-      "icon" : "icon-sr.png"
+      "script": "moveToLibrary.js",
+      "handler": "moveAllSymbolsToExisitingLibrary",
+      "shortcut": "cmd alt L",
+      "name": "Move All Symbols To Library",
+      "description": "Move All Symbols To Library",
+      "identifier": "moveAll.library",
+      "icon": "icon-sr.png"
     },
     {
-      "script" : "moveToLibrary.js",
-      "handler" : "moveSelectedSymbolsToExisitingLibrary",
-      "shortcut" : "cmd alt k",
-      "name" : "Move Selected Symbols To Library",
-      "description" : "Select State from the Symbol states and apply it to instance",
-      "identifier" : "moveSelected.library",
-      "icon" : "icon-sr.png"
+      "script": "moveToLibrary.js",
+      "handler": "moveSelectedSymbolsToExisitingLibrary",
+      "shortcut": "cmd alt k",
+      "name": "Move Selected Symbols To Library",
+      "description": "Select State from the Symbol states and apply it to instance",
+      "identifier": "moveSelected.library",
+      "icon": "icon-sr.png"
     }
-  ]
+  ],
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }

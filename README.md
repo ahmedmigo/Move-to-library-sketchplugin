@@ -1,8 +1,5 @@
 # Move to library Sketch Plugin
 <p>
-⚠️ The last sketch version Move to Library plugin support is v49
-</p>
-<p>
 <img align="right" src="https://raw.githubusercontent.com/ahmedmigo/Move-to-library-sketchplugin/master/icon.png">
 You can now move symbol from your project to any library 🔁 and re-attach all the symbol instances to this library. also it keep the overrides without any problems and it work with abstract that have libraries not in your local machine.
 </p>
