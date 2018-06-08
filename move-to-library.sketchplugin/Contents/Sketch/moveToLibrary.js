@@ -1981,12 +1981,8 @@ function AddSymbolToDoc(context, symbol, symbolsInDocByName, doc, library, local
     if (symbolChildren[i].class() == MSSymbolInstance) {
       symbolsInDocByName = replaceInstance(context, symbol.children()[i], symbolsInDocByName, library);
       LOG(symbolChildren[i].symbolMaster() + "🎉");
-      var childMaster = symbolsInDocByName[symbolChildren[i].symbolMaster().name()]; //var foriegnSymbol = localSymbolForSymbol_inLibrary(context,childMaster,library)
-
-      symbolCopy.children()[i].changeInstanceToSymbol(childMaster); //overrideMapID = getOverrides(symbolCopy.children()[i].symbolMaster(),foriegnSymbol)
-      //symbolCopy.children()[i].updateOverridesWithObjectIDMap(overrideMapID)
-      //LOG("🏖" + symbolCopy.children()[i].overrides())
-      //printIDMaping(overrideMapID)
+      var childMaster = symbolsInDocByName[symbolChildren[i].symbolMaster().name()];
+      symbolCopy.children()[i].changeInstanceToSymbol(childMaster);
     }
   }
 
@@ -2032,32 +2028,15 @@ function replaceInstance(context, symbol, symbolsInDocByName, library) {
   var librarySymbols = library.document().localSymbols();
   var symbolInDoc = symbolsInDocByName[symbolName];
 
-  if (symbolInDoc != undefined) {
-    LOG(symbolInDoc.objectID() + library);
-    LOG(symbolInDoc.symbolID() + library);
-    var foriegnSymbol = localSymbolForSymbol_inLibrary(context, symbolInDoc, library);
-    LOG("✅" + foriegnSymbol);
-    reattachAllInstance(context, symbol, foriegnSymbol);
-    LOG(movedInstancesNumber + " Instance Done 🤘"); // browserWindow.webContents.executeJavaScript(
-    //   `changeLoading(${100},${JSON.stringify(
-    //     movedInstancesNumber + " Instance Done 🤘"
-    //   )})`
-    // );
-    // context.api().message(movedInstancesNumber + " Instance Done 🤘");
-  } //if symbol not exsit add and reattach instance
-  else {
-      symbolsInDocByName = addSymbolTolibrary(context, symbol, symbolsInDocByName, library, context.document.documentData());
-      LOG(movedSymbolsNumber + " Symbols moved 🤘");
-      symbolInDoc = symbolsInDocByName[symbolName];
-      LOG(symbolInDoc.objectID() + library);
-      LOG(symbolInDoc.symbolID() + library);
-      var foriegnSymbol = localSymbolForSymbol_inLibrary(context, symbolInDoc, library);
-      LOG(symbolInDoc);
-      LOG("2 ✅" + foriegnSymbol);
-      idmap[symbol.symbolID()] = foriegnSymbol.symbolID();
-      reattachAllInstance(context, symbol, foriegnSymbol);
-    }
+  if (symbolInDoc == undefined) {
+    symbolsInDocByName = addSymbolTolibrary(context, symbol, symbolsInDocByName, library, context.document.documentData());
+    LOG(movedSymbolsNumber + " Symbols moved 🤘");
+    symbolInDoc = symbolsInDocByName[symbolName];
+  }
 
+  var foriegnSymbol = localSymbolForSymbol_inLibrary(context, symbolInDoc, library);
+  idmap[symbol.symbolID()] = foriegnSymbol.symbolID();
+  reattachAllInstance(context, symbol, foriegnSymbol);
   symbol.removeFromParent();
   return symbolsInDocByName;
 }
@@ -2113,28 +2092,27 @@ function reattachAllInstance(context, symbol, foreignSymbol) {
     var instanceArray = Instances.allObjects();
 
     for (var i = 0; i < instanceArray.count(); i++) {
-      // var presentatge = i / Instances.count() * 100;
-      // browserWindow.webContents.executeJavaScript(
-      //   `changeLoading(${presentatge},${JSON.stringify(
-      //     " Reattaching " + symbol.name()
-      //   )})`
-      // );
-      // context
-      //   .api()
-      //   .message(
-      //     "Reconnecting [" + i + "/" + Instances.count() + "] Instances 🕗"
-      //   );
-      LOG("Reconnecting [" + i + "/" + Instances.count() + "] Instances 🕗");
-      LOG("🐙" + instanceArray[i].symbolMaster());
-      LOG("🐙" + symbol);
-      idmap = Object.assign({}, idmap, getOverrides(instanceArray[i].symbolMaster(), foreignSymbol));
-      printIDMaping(idmap);
-      instanceArray[i].changeInstanceToSymbol(foreignSymbol);
-      LOG("before 😡" + instanceArray[i].overrides());
-      instanceArray[i].updateOverridesWithObjectIDMap(idmap);
-      LOG("After😡" + instanceArray[i].overrides()); //printIDMaping(overrideMapID)
+      if (instanceArray[i].symbolMaster() == symbol) {
+        // var presentatge = i / Instances.count() * 100;
+        // browserWindow.webContents.executeJavaScript(
+        //   `changeLoading(${presentatge},${JSON.stringify(
+        //     " Reattaching " + symbol.name()
+        //   )})`
+        // );
+        // context
+        //   .api()
+        //   .message(
+        //     "Reconnecting [" + i + "/" + Instances.count() + "] Instances 🕗"
+        //   );
+        LOG("Reconnecting [" + i + "/" + Instances.count() + "] Instances 🕗");
+        idmap = Object.assign({}, idmap, getOverrides(instanceArray[i].symbolMaster(), foreignSymbol));
+        printIDMaping(idmap);
+        instanceArray[i].changeInstanceToSymbol(foreignSymbol);
+        movedInstancesNumber++;
+      }
 
-      movedInstancesNumber++; //symbol.removeFromParent()
+      instanceArray[i].updateOverridesWithObjectIDMap(idmap); //printIDMaping(overrideMapID)
+      //symbol.removeFromParent()
     }
   }
 }
@@ -2147,9 +2125,12 @@ function getSymbolInstances(context, symbolMaster) {
     return null;
   }
 
-  var symbolInstancesArray = symbolInstances.allObjects();
-  var predicate = NSPredicate.predicateWithFormat("symbolMaster == %@", symbolMaster);
-  var instances = symbolInstancesArray.filteredArrayUsingPredicate(predicate); // var symbolInstances = NSMutableArray.array();
+  var symbolInstancesArray = symbolInstances.allObjects(); // var predicate = NSPredicate.predicateWithFormat(
+  //   "symbolMaster == %@",
+  //   symbolMaster
+  // );
+  // var instances = symbolInstancesArray.filteredArrayUsingPredicate(predicate);
+  // var symbolInstances = NSMutableArray.array();
   // var pages = context.document.pages(),
   //   pageLoop = pages.objectEnumerator(),
   //   page;
@@ -2166,15 +2147,18 @@ function getSymbolInstances(context, symbolMaster) {
   //   }
   // }
 
-  return instances;
+  return symbolInstancesArray;
 }
 
 function getOverrides(symbolInstance1, symbolInstance2) {
-  LOG(symbolInstance1 + symbolInstance2);
   var overrides = {};
   var availableOverrides1 = symbolInstance1.availableOverrides();
   var availableOverrides2 = symbolInstance2.availableOverrides();
-  LOG(availableOverrides1 + availableOverrides2);
+  overrides = getOverridesforOverridePoints(availableOverrides1, availableOverrides2, overrides);
+  return overrides;
+}
+
+function getOverridesforOverridePoints(availableOverrides1, availableOverrides2, overrides) {
   var cacheByLayerName1 = [];
   var cacheByLayerName2 = [];
 
@@ -2189,7 +2173,6 @@ function getOverrides(symbolInstance1, symbolInstance2) {
     var availableOverride1 = cacheByLayerName1[layerName];
     var availableOverride2 = cacheByLayerName2[layerName];
     var overridePoint1 = availableOverride1.overridePoint();
-    var overridePoint2 = availableOverride2.overridePoint();
 
     if (overridePoint1.isSymbolOverride()) {
       var symbolOverrides = getOverridesFromSymbolOverride(availableOverride1, availableOverride2, {});
@@ -2205,42 +2188,12 @@ function getOverrides(symbolInstance1, symbolInstance2) {
 }
 
 function getOverridesFromSymbolOverride(symbolOverride1, symbolOverride2, overrides) {
-  LOG("1");
   var availableOverrides1 = symbolOverride1.children();
   var availableOverrides2 = symbolOverride2.children();
   var override1 = symbolOverride1.overridePoint().layerID();
   var override2 = symbolOverride2.overridePoint().layerID();
-  LOG(symbolOverride1.overridePoint().layerName());
-  LOG(symbolOverride2.overridePoint().layerName());
   overrides[override1] = override2;
-  LOG(overrides);
-  var cacheByLayerName1 = [];
-  var cacheByLayerName2 = [];
-
-  for (var i = 0; i < availableOverrides1.count(); i++) {
-    var layerName = availableOverrides1[i].overridePoint().layerName();
-    cacheByLayerName1[layerName] = availableOverrides1[i];
-    cacheByLayerName2[layerName] = availableOverrides2[i];
-  }
-
-  for (var i = 0; i < availableOverrides1.count(); i++) {
-    var layerName = availableOverrides1[i].overridePoint().layerName();
-    var availableOverride1 = cacheByLayerName1[layerName];
-    var availableOverride2 = cacheByLayerName2[layerName];
-    var overridePoint1 = availableOverride1.overridePoint();
-    var overridePoint2 = availableOverride2.overridePoint();
-
-    if (overridePoint1.isSymbolOverride()) {
-      var symbolOverrides = getOverridesFromSymbolOverride(availableOverride1, availableOverride2, {});
-      overrides = Object.assign({}, overrides, symbolOverrides);
-    } else {
-      var override1 = availableOverride1.overridePoint().layerID();
-      var override2 = availableOverride2.overridePoint().layerID();
-      overrides[override1] = override2;
-    }
-  }
-
-  LOG("5");
+  overrides = getOverridesforOverridePoints(availableOverrides1, availableOverrides2, overrides);
   return overrides;
 }
 
