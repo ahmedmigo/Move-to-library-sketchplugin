@@ -1,7 +1,6 @@
 {
   "name": "Move To Library 🔁",
   "identifier": "moveToLibrary.plugin",
-  "version": "2.0.3",
   "compatibleVersion": 50,
   "description": "Move symbols from project files to library",
   "authorEmail": "ahmad.migo@gmail.com",
@@ -28,6 +27,7 @@
       "icon": "icon-sr.png"
     }
   ],
+  "version": "2.0.4",
   "disableCocoaScriptPreprocessor": true,
   "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }
