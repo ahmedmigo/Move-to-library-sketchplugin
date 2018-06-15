@@ -28,6 +28,5 @@
     }
   ],
   "version": "2.0.4",
-  "disableCocoaScriptPreprocessor": true,
-  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
+  "disableCocoaScriptPreprocessor": true
 }
