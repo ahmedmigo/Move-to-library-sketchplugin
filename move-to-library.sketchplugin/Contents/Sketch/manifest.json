@@ -1,7 +1,7 @@
 {
   "name": "Move To Library 🔁",
   "identifier": "moveToLibrary.plugin",
-  "compatibleVersion": 50,
+  "compatibleVersion": 51,
   "description": "Move symbols from project files to library",
   "authorEmail": "ahmad.migo@gmail.com",
   "URL": "https://github.com/ahmedmigo/Move-to-library-sketchplugin",
@@ -27,6 +27,7 @@
       "icon": "icon-sr.png"
     }
   ],
-  "version": "2.0.4",
-  "disableCocoaScriptPreprocessor": true
+  "version": "2.1.0",
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }

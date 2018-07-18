@@ -13090,8 +13090,7 @@ function reattachAllInstance(context, symbol, foreignSymbol) {
 }
 
 function getSymbolInstances(context, symbolMaster) {
-  var symbolID = symbolMaster.symbolID();
-  var symbolInstances = context.document.documentData().symbolInstancesBySymbolID()[symbolID];
+  var symbolInstances = symbolMaster.allInstances();
 
   if (symbolInstances == null) {
     return null;
