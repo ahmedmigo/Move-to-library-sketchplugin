@@ -13202,7 +13202,12 @@ function LOG(message) {
   if (debug) {
     log(message);
   }
-}
+} // @Ahmed Genaidy
+// ```NSApplication.sharedApplication().windows().forEach(w1 => {
+//   if(w1.document && w1.document()) {
+//     log(w1.document());
+//   }
+// });```
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/promise-polyfill/lib/index.js */ "./node_modules/promise-polyfill/lib/index.js"), __webpack_require__(/*! ./../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ })
