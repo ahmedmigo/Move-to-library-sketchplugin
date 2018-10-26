@@ -12997,7 +12997,7 @@ function AddSymbolToDoc(context, symbol, symbolsInDocByName, doc, library, local
 }
 
 function getAllLibraries() {
-  var userLibraries = AppController.sharedInstance().librariesController().libraries();
+  var userLibraries = AppController.sharedInstance().librariesController().availableLibraries();
   var librariesNameAndReference = [];
 
   for (var i = 0; i < userLibraries.count(); i++) {
@@ -13047,6 +13047,7 @@ function addSymbolTolibrary(context, symbol, symbolsInDocByName, library, localD
     foreigndocument = MSDocument.new();
     foreigndocument.readDocumentFromURL_ofType_error(fileURL, "sketch", null);
     foreigndocument.revertToContentsOfURL_ofType_error(fileURL, "sketch", null);
+    isDocumentOpenThenClose(foreigndocument);
   }
 
   symbolsInDocByName = AddSymbolToDoc(context, symbol, symbolsInDocByName, foreigndocument.documentData(), library, localDoc);
@@ -13202,6 +13203,17 @@ function LOG(message) {
   if (debug) {
     log(message);
   }
+}
+
+function isDocumentOpenThenClose(DOCUMENT) {
+  NSApplication.sharedApplication().windows().forEach(function (w1) {
+    if (w1.document && w1.document()) {
+      if (String(w1.document().documentData().objectID()) == String(DOCUMENT.documentData().objectID())) {
+        w1.document().close();
+        log("fileclosed");
+      }
+    }
+  });
 } // @Ahmed Genaidy
 // ```NSApplication.sharedApplication().windows().forEach(w1 => {
 //   if(w1.document && w1.document()) {
