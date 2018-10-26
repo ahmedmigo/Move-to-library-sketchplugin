@@ -98,7 +98,7 @@ var exports =
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/aa9b57a9f7368b8439ad6026a27fa864.html").path();
+module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/a028379ac5869e353012a39fa317ac1d.html").path();
 
 /***/ }),
 
