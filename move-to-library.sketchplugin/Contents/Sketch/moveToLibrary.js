@@ -12796,17 +12796,16 @@ module.exports = g;
 /*!******************************!*\
   !*** ./src/moveToLibrary.js ***!
   \******************************/
-/*! exports provided: moveAllSymbolsToExisitingLibrary, moveSelectedSymbolsToExisitingLibrary */
+/*! exports provided: moveAllSymbolsToExisitingLibrary, moveSelectedInstancetToLocalDoc, moveSelectedSymbolsToExisitingLibrary */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(Promise, global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveAllSymbolsToExisitingLibrary", function() { return moveAllSymbolsToExisitingLibrary; });
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveAllSymbolsToExisitingLibrary", function() { return moveAllSymbolsToExisitingLibrary; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveSelectedInstancetToLocalDoc", function() { return moveSelectedInstancetToLocalDoc; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "moveSelectedSymbolsToExisitingLibrary", function() { return moveSelectedSymbolsToExisitingLibrary; });
 /* harmony import */ var sketch_module_web_view__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sketch-module-web-view */ "./node_modules/sketch-module-web-view/lib/index.js");
 /* harmony import */ var sketch_module_web_view__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sketch_module_web_view__WEBPACK_IMPORTED_MODULE_0__);
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } } function _next(value) { step("next", value); } function _throw(err) { step("throw", err); } _next(); }); }; }
-
 
 
 if (!global._babelPolyfill) {
@@ -12833,72 +12832,73 @@ function moveAllSymbolsToExisitingLibrary(context) {
   var libraries = getAllLibraries();
   getLayoutSettings(context, context.document.documentData().localSymbols(), libraries);
 }
+function moveSelectedInstancetToLocalDoc(context) {
+  for (var k = 0; k < context.selection.count(); k++) {
+    if (context.selection[k].class() == MSSymbolInstance) {
+      var symbolMaster = context.selection[k].symbolMaster();
+
+      if (symbolMaster.isForeign()) {
+        var symbolMasterID = symbolMaster.symbolID();
+
+        if (context.document.documentData().symbolWithID(symbolMasterID) && context.document.documentData().symbolWithID(symbolMasterID).isForeign()) {
+          var symbolMasterCopy = symbolMaster.copy();
+          context.document.documentData().addSymbolMaster(symbolMaster);
+        }
+
+        var instances = context.selection[k].symbolMaster().allInstances().allObjects();
+
+        for (var i = 0; i < instances.count(); i++) {
+          instances[i].changeInstanceToSymbol(symbolMaster);
+        }
+      } else {
+        context.api().message("layer selected is not Symbol from library 🤔");
+      }
+    } else {
+      context.api().message("layer selected is not Symbol Instance 🤔");
+    }
+  }
+}
 function moveSelectedSymbolsToExisitingLibrary(context) {
   var libraries = getAllLibraries();
   getLayoutSettings(context, context.selection, libraries);
 }
 
-function moveToLibrary(_x, _x2, _x3) {
-  return _moveToLibrary.apply(this, arguments);
-}
+function moveToLibrary(context, symbols, library) {
+  if (symbols.count() > 0) {
+    var foreignSymbolsInLibraryByName = getSymbolsInDocByName(library.document());
+    var localSymbolsByName = getSymbolsInDocByName(context.document.documentData());
+    getIdMap(context, localSymbolsByName, foreignSymbolsInLibraryByName, library);
 
-function _moveToLibrary() {
-  _moveToLibrary = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(context, symbols, library) {
-    var foreignSymbolsInLibraryByName, localSymbolsByName, i;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            if (!(symbols.count() > 0)) {
-              _context.next = 8;
-              break;
-            }
-
-            foreignSymbolsInLibraryByName = getSymbolsInDocByName(library.document());
-            localSymbolsByName = getSymbolsInDocByName(context.document.documentData());
-            getIdMap(context, localSymbolsByName, foreignSymbolsInLibraryByName, library);
-
-            for (i = 0; i < symbols.count(); i++) {
-              if (validate(symbols[i])) {
-                // var presentatge = i / symbols.count() * 100;
-                // browserWindow.webContents.executeJavaScript(
-                //   `changeLoading(${presentatge},${JSON.stringify(
-                //     "Moving " + symbols[i].name()
-                //   )})`
-                // );
-                // context.api().message("Moving [" + i + "/" + selection.count() + "] 🕗")
-                replaceInstance(context, symbols[i], foreignSymbolsInLibraryByName, library);
-              }
-            } // browserWindow.webContents.executeJavaScript(
-            //   `changeLoading(${100},${JSON.stringify(
-            //     movedSymbolsNumber + " Re-attached ✌️"
-            //   )})`
-            // );
-            // context
-            //   .api()
-            //   .message(
-            //     movedSymbolsNumber +
-            //       " Moved Symbols ✌️ and " +
-            //       movedInstancesNumber +
-            //       " reattached Symbols instances ✌️"
-            //   );
-
-
-            return _context.abrupt("return", "successed");
-
-          case 8:
-            return _context.abrupt("return", "fail");
-
-          case 9:
-          case "end":
-            return _context.stop();
-        }
+    for (var i = 0; i < symbols.count(); i++) {
+      if (validate(symbols[i])) {
+        // var presentatge = i / symbols.count() * 100;
+        // browserWindow.webContents.executeJavaScript(
+        //   `changeLoading(${presentatge},${JSON.stringify(
+        //     "Moving " + symbols[i].name()
+        //   )})`
+        // );
+        // context.api().message("Moving [" + i + "/" + selection.count() + "] 🕗")
+        replaceInstance(context, symbols[i], foreignSymbolsInLibraryByName, library);
       }
-    }, _callee, this);
-  }));
-  return _moveToLibrary.apply(this, arguments);
+    } // browserWindow.webContents.executeJavaScript(
+    //   `changeLoading(${100},${JSON.stringify(
+    //     movedSymbolsNumber + " Re-attached ✌️"
+    //   )})`
+    // );
+    // context
+    //   .api()
+    //   .message(
+    //     movedSymbolsNumber +
+    //       " Moved Symbols ✌️ and " +
+    //       movedInstancesNumber +
+    //       " reattached Symbols instances ✌️"
+    //   );
+
+
+    return "successed";
+  } else {
+    return "fail";
+  }
 }
 
 function getLayoutSettings(context, symbols, librariesArray) {
@@ -12911,15 +12911,11 @@ function getLayoutSettings(context, symbols, librariesArray) {
     runWebCallback(browserWindow, "getLibraries", librariesArray);
   });
   browserWindow.webContents.on("setLibrary", function (libraryIndex) {
-    try {
-      moveToLibrary(context, symbols, librariesArray[libraryIndex].Reference).then(function (response) {
-        if (response == "successed") {
-          runWebCallback(browserWindow, "successLoading", movedSymbolsNumber + " Moved Symbols ✌️ and " + movedInstancesNumber + " reattached Symbols instances ✌️");
-        } else {
-          runWebCallback(browserWindow, "errorLoading");
-        }
-      });
-    } catch (err) {
+    var response = moveToLibrary(context, symbols, librariesArray[libraryIndex].Reference);
+
+    if (response == "successed") {
+      runWebCallback(browserWindow, "successLoading", movedSymbolsNumber + " Moved Symbols ✌️ and " + movedInstancesNumber + " reattached Symbols instances ✌️");
+    } else {
       runWebCallback(browserWindow, "errorLoading");
     }
   });
@@ -13220,7 +13216,7 @@ function isDocumentOpenThenClose(DOCUMENT) {
 //     log(w1.document());
 //   }
 // });```
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/promise-polyfill/lib/index.js */ "./node_modules/promise-polyfill/lib/index.js"), __webpack_require__(/*! ./../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ })
 
@@ -13233,6 +13229,7 @@ function isDocumentOpenThenClose(DOCUMENT) {
 }
 that['moveAllSymbolsToExisitingLibrary'] = __skpm_run.bind(this, 'moveAllSymbolsToExisitingLibrary');
 that['onRun'] = __skpm_run.bind(this, 'default');
-that['moveSelectedSymbolsToExisitingLibrary'] = __skpm_run.bind(this, 'moveSelectedSymbolsToExisitingLibrary')
+that['moveSelectedSymbolsToExisitingLibrary'] = __skpm_run.bind(this, 'moveSelectedSymbolsToExisitingLibrary');
+that['moveSelectedInstancetToLocalDoc'] = __skpm_run.bind(this, 'moveSelectedInstancetToLocalDoc')
 
 //# sourceMappingURL=moveToLibrary.js.map

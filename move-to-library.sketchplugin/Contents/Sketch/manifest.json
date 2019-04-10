@@ -25,9 +25,18 @@
       "description": "Select State from the Symbol states and apply it to instance",
       "identifier": "moveSelected.library",
       "icon": "icon-sr.png"
+    },
+    {
+      "script": "moveToLibrary.js",
+      "handler": "moveSelectedInstancetToLocalDoc",
+      "shortcut": "cmd alt l",
+      "name": "Move Selected Library Symbols Intance To Local Document 🗒",
+      "description": "Move Library symbol to local file",
+      "identifier": "movetolocaldoc.library",
+      "icon": "icon-sr.png"
     }
   ],
-  "version": "2.2.5",
+  "version": "2.2.6",
   "disableCocoaScriptPreprocessor": true,
   "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }
