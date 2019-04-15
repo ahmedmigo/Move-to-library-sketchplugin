@@ -98,7 +98,7 @@ var exports =
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/2ddcf62d39fb8e7dad5959fde9673b37.html").path();
+module.exports = "file://" + context.plugin.urlForResourceNamed("_webpack_resources/93996d3df6bc59da4dd858c805e7ad34.html").path();
 
 /***/ }),
 
@@ -12842,7 +12842,7 @@ function moveSelectedInstancetToLocalDoc(context) {
 
         if (context.document.documentData().symbolWithID(symbolMasterID) && context.document.documentData().symbolWithID(symbolMasterID).isForeign()) {
           var symbolMasterCopy = symbolMaster.copy();
-          context.document.documentData().addSymbolMaster(symbolMaster);
+          context.document.documentData().addSymbolMaster(symbolMasterCopy);
         }
 
         var instances = context.selection[k].symbolMaster().allInstances().allObjects();

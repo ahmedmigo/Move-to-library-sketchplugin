@@ -36,7 +36,7 @@
       "icon": "icon-sr.png"
     }
   ],
-  "version": "2.2.6",
+  "version": "2.2.8",
   "disableCocoaScriptPreprocessor": true,
   "appcast": "https://raw.githubusercontent.com//master/.appcast.xml"
 }
