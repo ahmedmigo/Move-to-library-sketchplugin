@@ -12848,7 +12848,7 @@ function moveSelectedInstancetToLocalDoc(context) {
         var instances = context.selection[k].symbolMaster().allInstances().allObjects();
 
         for (var i = 0; i < instances.count(); i++) {
-          instances[i].changeInstanceToSymbol(symbolMaster);
+          instances[i].changeInstanceToSymbol(symbolMasterCopy);
         }
       } else {
         context.api().message("layer selected is not Symbol from library 🤔");
@@ -12974,10 +12974,14 @@ function AddSymbolToDoc(context, symbol, symbolsInDocByName, doc, library, local
 
   for (var i = 0; i < symbolChildren.count(); i++) {
     if (symbolChildren[i].class() == MSSymbolInstance) {
+      var oldOverrides = symbolChildren[i].overrides();
       symbolsInDocByName = replaceInstance(context, symbol.children()[i], symbolsInDocByName, library);
       LOG(symbolChildren[i].symbolMaster() + "🎉");
       var childMaster = symbolsInDocByName[symbolChildren[i].symbolMaster().name()];
       symbolCopy.children()[i].changeInstanceToSymbol(childMaster);
+      log("🌚" + symbolCopy.children()[i].overrides());
+      symbolCopy.children()[i].overrides = oldOverrides;
+      log("🌕" + symbolCopy.children()[i].overrides());
     }
   }
 
@@ -13061,6 +13065,8 @@ function reattachAllInstance(context, symbol, foreignSymbol) {
     var instanceArray = Instances.allObjects();
 
     for (var i = 0; i < instanceArray.count(); i++) {
+      var oldOverrides = instanceArray[i].overrides();
+
       if (instanceArray[i].symbolMaster() == symbol) {
         // var presentatge = i / Instances.count() * 100;
         // browserWindow.webContents.executeJavaScript(
@@ -13080,6 +13086,7 @@ function reattachAllInstance(context, symbol, foreignSymbol) {
         movedInstancesNumber++;
       }
 
+      instanceArray[i].overrides = oldOverrides;
       instanceArray[i].updateOverridesWithObjectIDMap(idmap); //printIDMaping(overrideMapID)
       //symbol.removeFromParent()
     }
