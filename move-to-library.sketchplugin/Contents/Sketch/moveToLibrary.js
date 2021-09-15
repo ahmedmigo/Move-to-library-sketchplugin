@@ -13173,7 +13173,7 @@ function getOverridesFromSymbolOverride(symbolOverride1, symbolOverride2, overri
 }
 
 function localSymbolForSymbol_inLibrary(context, symbol, library) {
-  if (MSApplicationMetadata.metadata().appVersion >= 50) {
+  if (BCSketchInfo.shared().metadata().appVersion >= 50) {
     var shareableObjectReference = MSShareableObjectReference.referenceForShareableObject_inLibrary(symbol, library);
     var importedSymbol = AppController.sharedInstance().librariesController().importShareableObjectReference_intoDocument(shareableObjectReference, context.document.documentData());
   } else {
